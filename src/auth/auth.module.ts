@@ -5,14 +5,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env.local',
+      isGlobal: true,
+    }),
     PassportModule.register({
       defaultStrategy: 'jwt',
     }),
     JwtModule.register({
-      secret,
+      secret: process.env.JWT_SECRET,
+      signOptions: {
+        expiresIn: 3600,
+      },
     }),
     TypeOrmModule.forFeature([User]),
   ],
