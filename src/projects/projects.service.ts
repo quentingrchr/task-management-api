@@ -15,6 +15,7 @@ export class ProjectsService {
     @InjectRepository(Status)
     private statusRepository: Repository<Status>,
   ) {}
+
   async create(createProjectDto: CreateProjectDto): Promise<Project> {
     const { name, description, withDefaultStatuses } = createProjectDto;
     const newProject = this.projectsRepository.create({
