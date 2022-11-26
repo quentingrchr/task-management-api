@@ -1,3 +1,4 @@
+import { Status } from 'src/statuses/entities/status.entity';
 import {
   PrimaryGeneratedColumn,
   Column,
@@ -13,7 +14,7 @@ import { Task } from '../../tasks/entities/task.entity';
 @Entity()
 export class Project extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   name: string;
@@ -21,8 +22,8 @@ export class Project extends BaseEntity {
   @Column()
   description: string;
 
-  // @Column()
-  // status: ProjectStatus;
+  @OneToMany((_) => Task, (task) => task.project, { eager: false })
+  status: Status[];
 
   @CreateDateColumn()
   createdAt: Date;

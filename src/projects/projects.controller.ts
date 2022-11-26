@@ -25,14 +25,14 @@ export class ProjectsController {
     return this.projectsService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.projectsService.findOne(+id);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.projectsService.findOne(id);
+  }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-  //   return this.projectsService.update(+id, updateProjectDto);
+  //   return this.projectsService.update(id, updateProjectDto);
   // }
 
   // @Delete(':id')
