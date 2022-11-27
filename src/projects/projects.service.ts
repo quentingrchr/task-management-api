@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Status } from 'src/statuses/entities/status.entity';
 import { defaultStatuses } from 'src/statuses/defaultStatuses';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class ProjectsService {
@@ -16,11 +17,15 @@ export class ProjectsService {
     private statusRepository: Repository<Status>,
   ) {}
 
-  async create(createProjectDto: CreateProjectDto): Promise<Project> {
+  async create(
+    createProjectDto: CreateProjectDto,
+    user: User,
+  ): Promise<Project> {
     const { name, description, withDefaultStatuses } = createProjectDto;
     const newProject = this.projectsRepository.create({
       name,
       description,
+      user,
     });
     const projectQuery = this.projectsRepository.save(newProject);
     if (withDefaultStatuses) {
@@ -32,17 +37,17 @@ export class ProjectsService {
           });
           await this.statusRepository.save(status);
         });
-
-        // create 3 default status
-        // TODO / DOING / DONE
       });
     }
 
     return projectQuery;
   }
 
-  findAll() {
-    return `This action returns all projects`;
+  async findAll(user: User): Promise<Project[]> {
+    const query = this.projectsRepository.createQueryBuilder('project');
+    query.where({ user });
+    const projects = await query.getMany();
+    return projects;
   }
 
   findOne(id: string): Promise<Project> {

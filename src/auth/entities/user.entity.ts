@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+import { Project } from 'src/projects/entities/project.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -12,4 +20,7 @@ export class User extends BaseEntity {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Project, (project) => project.user, { eager: true })
+  projects: Project[];
 }

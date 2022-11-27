@@ -7,9 +7,12 @@ import {
   Entity,
   BaseEntity,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 
 import { Task } from '../../tasks/entities/task.entity';
+import { User } from '../../auth/entities/user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Project extends BaseEntity {
@@ -33,4 +36,10 @@ export class Project extends BaseEntity {
 
   @OneToMany((_) => Task, (task) => task.project, { eager: true })
   tasks: Task[];
+
+  @ManyToOne((_) => User, (user) => user.projects, { eager: false })
+  @Exclude({
+    toPlainOnly: true,
+  })
+  user: User;
 }

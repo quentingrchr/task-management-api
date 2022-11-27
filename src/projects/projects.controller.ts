@@ -6,23 +6,28 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/auth/entities/user.entity';
+import { GetUser } from 'src/auth/get-user.decorator';
 
 @Controller('projects')
+@UseGuards(AuthGuard())
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Post()
-  create(@Body() createProjectDto: CreateProjectDto) {
-    return this.projectsService.create(createProjectDto);
+  create(@Body() createProjectDto: CreateProjectDto, @GetUser() user: User) {
+    return this.projectsService.create(createProjectDto, user);
   }
 
   @Get()
-  findAll() {
-    return this.projectsService.findAll();
+  findAll(@GetUser() user: User) {
+    return this.projectsService.findAll(user);
   }
 
   @Get(':id')
